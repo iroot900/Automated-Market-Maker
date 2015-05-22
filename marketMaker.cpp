@@ -12,6 +12,7 @@ MarketMaker::MarketMaker(int argc, char** argv) :verbose(true), median(true), mi
 		{ "VWAP", 0, 0, 'w' },
 		{ "filename", 1, 0, 'f' },
 		{ "delimiter", 1, 0, 'd' },
+		{ "randomOrder", 1, 0, 'r' },
 		{ 0, 1, 0, 0 },
 		};
 
@@ -417,8 +418,9 @@ void MarketMaker::help() const
 		cout << "-p or -midpoint : disable print out midpoint for each equity!" << endl;
 		cout << "-t or -transfers : disable print out transaction details for each client!" << endl;
 		cout << "-w or -VWAP : disable print out volume weighted average price of the following equity!" << endl;
-		cout << "-f or -filename : specify input filename, default one is  test-1-g-AMZN.txt" << endl;
+		cout << "-f or -filename : specify input filename, default one is  test.txt" << endl;
 		cout << "-d or -delimiter    : specify delimiter for input file, default one is space and tab " << endl;
+		cout << "-r or -randomOrder    : use possion process to generate random order flow instead of using the test.txt " << endl;
 	}
 
 void MarketMaker::print() const
