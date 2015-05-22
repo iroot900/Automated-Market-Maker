@@ -16,7 +16,7 @@ MarketMaker::MarketMaker(int argc, char** argv) :verbose(true), median(true), mi
 		};
 
 		int c = 0;
-		while ((c = getopt_long(argc, argv, "hvmpf:twa", long_options, NULL) != -1))
+		while ((c = getopt_long(argc, argv, "hvmpf:dtwr", long_options, NULL) != -1))
 		{
 		switch (c)
 		{
@@ -325,16 +325,22 @@ void MarketMaker::processTime(const Order& order)
 	{
 		if (order.timeStamp != currentStamp)
 		{
-			for (auto medianPair : medians)
+			if(median)
 			{
-				cout << "Median match price of " << medianPair.first << " at time " << currentStamp << " is " << medianPair.second << endl;
+				for (auto medianPair : medians)
+				{
+					cout << "Median match price of " << medianPair.first << " at time " << currentStamp << " is " << medianPair.second << endl;
+				}
 			}
-			for (auto equity : equities)
+			if(midPoint)
 			{
-				if (sellBooks[equity].size() == 0 || buyBooks[equity].size() == 0)
-					cout << "Midpoint of " << equity << " at time " << currentStamp << " is undefine! " << endl;
-				else
-					cout << "Midpoint of " << equity << " at time " << currentStamp << " is $ " << ((sellBooks[equity].top().price + buyBooks[equity].top().price) >> 1) << endl;
+				for (auto equity : equities)
+				{
+					if (sellBooks[equity].size() == 0 || buyBooks[equity].size() == 0)
+						cout << "Midpoint of " << equity << " at time " << currentStamp << " is undefine! " << endl;
+					else
+						cout << "Midpoint of " << equity << " at time " << currentStamp << " is $ " << ((sellBooks[equity].top().price + buyBooks[equity].top().price) >> 1) << endl;
+				}
 			}
 			currentStamp = order.timeStamp;
 		}
@@ -422,25 +428,31 @@ void MarketMaker::print() const
 		cout << "Total Amount of Money Transferred: $" << moneyTransfered << endl;
 		cout << "Number of Completed Trades: " << noTrades << endl;
 		cout << "Number of Shares Traded: " << sharesTraded << endl;
-		for (auto client : clientsInfo)
+		if(transfers)
 		{
-			cout << client.first << " bought " << client.second.bought << " and sold " << client.second.sold << " for a net transfer of $" << client.second.netTransfer << endl;
-		}
-		for (auto equity : equities)
-		{
-			if (equitysInfo.find(equity) != equitysInfo.end())
+			for (auto client : clientsInfo)
 			{
-				long long amountMoney = 0, noShares = 0;
-				for (auto priceVolume : equitysInfo.at(equity).priceVolume)
-				{
-					amountMoney += priceVolume.first*priceVolume.second;
-					noShares += priceVolume.second;
-				}
-				cout << equity << "'s volume weighted average price : $" << amountMoney / noShares << endl;
+				cout << client.first << " bought " << client.second.bought << " and sold " << client.second.sold << " for a net transfer of $" << client.second.netTransfer << endl;
 			}
-			else
+		}
+		if(VWAP)
+		{
+			for (auto equity : equities)
 			{
-				cout << equity << "'s volume weighted average price : $" << -1 << endl;
+				if (equitysInfo.find(equity) != equitysInfo.end())
+				{
+					long long amountMoney = 0, noShares = 0;
+					for (auto priceVolume : equitysInfo.at(equity).priceVolume)
+					{
+						amountMoney += priceVolume.first*priceVolume.second;
+						noShares += priceVolume.second;
+					}
+					cout << equity << "'s volume weighted average price : $" << amountMoney / noShares << endl;
+				}
+				else
+				{
+					cout << equity << "'s volume weighted average price : $" << -1 << endl;
+				}
 			}
 		}
 	}
