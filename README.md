@@ -8,7 +8,7 @@ Simply run make and use command option -h or -help to see what this program coul
 		"-p or -midpoint : disable print out midpoint for each equity!" ;
 		"-t or -transfers : disable print out transaction details for each client!" ;
 		"-w or -VWAP : disable print out volume weighted average price of the following equity!" ;
-	     "-f or -filename : specify input filename, default one is  test.txt" ;
+	    "-f or -filename : specify input filename, default one is  test.txt" ;
 		"-d or -delimiter    : specify delimiter for input file, default one is space and tab " ;
 		"-r or -randomOrder    : use possion process to generate random order flow instead of using the test.txt " ;
 
